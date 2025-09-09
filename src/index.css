@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+/* * {
+  border: 1px solid red;
+} */
+
+:root {
+  --black: #121212;
+  --blue: #1d2346;
+  --gray: #959192;
+  --white: #fafafa;
+}

@@ -6,7 +6,7 @@ export default function DefaultLayout() {
         <>
             <Navbar />
 
-            <main>
+            <main className="bg-(--white)">
                 <Outlet />
             </main>
         </>
