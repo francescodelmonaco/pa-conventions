@@ -1,3 +1,4 @@
+import DetailsModal from "../components/DetailsModal";
 import { useGlobalContext } from "../contexts/GlobalContexts";
 
 export default function Home() {
@@ -7,7 +8,10 @@ export default function Home() {
         setSearch,
         typeFilter,
         setTypeFilter,
-        typeOptions
+        typeOptions,
+        modalOpen,
+        selectedConvention,
+        handleInfoClick
     } = useGlobalContext();
 
     return (
@@ -64,7 +68,10 @@ export default function Home() {
                                     <td className="py-2">{locations ?? '-'}</td>
                                     <td className="py-2">{discounts ?? '-'}</td>
                                     <td>
-                                        <button className="bg-(--gray) text-(--white) px-2 py-1 rounded-full font-bold cursor-pointer text-sm">Info</button>
+                                        <button
+                                            className="bg-(--gray) text-(--white) px-2 py-1 rounded-full font-bold cursor-pointer text-sm"
+                                            onClick={() => handleInfoClick(c)}
+                                        >Info</button>
                                     </td>
                                 </tr>
                             )
@@ -76,6 +83,11 @@ export default function Home() {
                     )}
                 </tbody>
             </table>
+
+            {/* details modal */}
+            {modalOpen && selectedConvention && (
+                <DetailsModal />
+            )}
         </div>
     )
-};
+}

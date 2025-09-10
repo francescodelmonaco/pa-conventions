@@ -5,17 +5,16 @@ import { supabase } from "../supabaseClient";
 const GlobalContext = createContext();
 
 const GlobalProvider = ({ children }) => {
-
-
     // posts list
     const [conventions, setConventions] = useState([]);
+
     // search/filter states
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [typeFilter, setTypeFilter] = useState("");
     const debounceTimeout = useRef();
 
-    // Debounce search input
+    // debounce search input
     useEffect(() => {
         if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
         debounceTimeout.current = setTimeout(() => {
@@ -24,14 +23,14 @@ const GlobalProvider = ({ children }) => {
         return () => clearTimeout(debounceTimeout.current);
     }, [search]);
 
-    // Get unique types for select options
+    // get unique types for select options
     const typeOptions = useMemo(() => {
         if (!Array.isArray(conventions)) return [];
         const allTypes = conventions.map(c => c.types).filter(Boolean);
         return Array.from(new Set(allTypes));
     }, [conventions]);
 
-    // Filter conventions by search and type
+    // filter conventions by search and type
     const filteredConventions = useMemo(() => {
         let filtered = conventions;
         if (typeFilter) {
@@ -63,6 +62,19 @@ const GlobalProvider = ({ children }) => {
 
     useEffect(() => { getConventions() }, []);
 
+    // Stato e logica per la modale dettagli convention
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedConvention, setSelectedConvention] = useState(null);
+
+    const handleInfoClick = (convention) => {
+        setSelectedConvention(convention);
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+        setSelectedConvention(null);
+    };
 
     // destructuring
     const value = {
@@ -72,7 +84,12 @@ const GlobalProvider = ({ children }) => {
         setSearch,
         typeFilter,
         setTypeFilter,
-        typeOptions
+        typeOptions,
+        // modale
+        modalOpen,
+        selectedConvention,
+        handleInfoClick,
+        closeModal
     };
 
     return (
