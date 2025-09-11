@@ -8,6 +8,8 @@ export default function Table() {
     } = useGlobalContext();
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const columns = [
         { key: "types", label: "Categoria" },
@@ -36,6 +38,22 @@ export default function Table() {
         return sorted;
     }, [filteredConventions, sortConfig]);
 
+    // Pagination logic
+    const totalRows = sortedConventions.length;
+    const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
+    const paginatedConventions = useMemo(() => {
+        const startIdx = (currentPage - 1) * rowsPerPage;
+        return sortedConventions.slice(startIdx, startIdx + rowsPerPage);
+    }, [sortedConventions, currentPage, rowsPerPage]);
+
+    // Adjust current page if rowsPerPage or filteredConventions changes
+    // (e.g. if you filter and currentPage is now out of range)
+    // eslint-disable-next-line
+    useMemo(() => {
+        if (currentPage > totalPages) setCurrentPage(1);
+        // eslint-disable-next-line
+    }, [rowsPerPage, totalPages]);
+
     const handleSort = (key) => {
         setSortConfig((prev) => {
             if (prev.key === key) {
@@ -44,6 +62,22 @@ export default function Table() {
             return { key, direction: "asc" };
         });
     };
+
+    const handleRowsPerPageChange = (e) => {
+        setRowsPerPage(Number(e.target.value));
+        setCurrentPage(1);
+    };
+
+    const handlePrevPage = () => {
+        setCurrentPage((prev) => Math.max(1, prev - 1));
+    };
+
+    const handleNextPage = () => {
+        setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+    };
+
+    const fromRow = totalRows === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1;
+    const toRow = Math.min(currentPage * rowsPerPage, totalRows);
 
     return (
         <div className="w-full flex justify-center items-center">
@@ -75,8 +109,8 @@ export default function Table() {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(sortedConventions) && sortedConventions.length > 0 ? (
-                            sortedConventions.map((c, idx) => {
+                        {Array.isArray(paginatedConventions) && paginatedConventions.length > 0 ? (
+                            paginatedConventions.map((c, idx) => {
                                 const { id, types, names, locations, discounts, status, balance, rate, deposit, phone } = c;
                                 return (
                                     <tr
@@ -118,12 +152,34 @@ export default function Table() {
 
                 {/* pagination */}
                 <div className="flex items-center justify-between px-6 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500">
-                    <span>1-10 of 97</span>
+                    <span>{fromRow}-{toRow} di {totalRows}</span>
                     <div className="flex items-center gap-2">
-                        <span>Rows per page: <span className="font-semibold">10</span></span>
-                        <button className="px-2 py-1 rounded hover:bg-gray-200"><i className="fa-solid fa-chevron-left text-xs"></i></button>
-                        <span className="font-semibold">1/10</span>
-                        <button className="px-2 py-1 rounded hover:bg-gray-200"><i className="fa-solid fa-chevron-right text-xs"></i></button>
+                        <span>Righe per pagina:
+                            <select
+                                className="ml-1 px-1 py-0.5 border rounded text-xs"
+                                value={rowsPerPage}
+                                onChange={handleRowsPerPageChange}
+                            >
+                                {[5, 10, 20, 50].map(opt => (
+                                    <option key={opt} value={opt}>{opt}</option>
+                                ))}
+                            </select>
+                        </span>
+                        <button
+                            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+                            onClick={handlePrevPage}
+                            disabled={currentPage === 1}
+                        >
+                            <i className="fa-solid fa-chevron-left text-xs"></i>
+                        </button>
+                        <span className="font-semibold">{currentPage}/{totalPages}</span>
+                        <button
+                            className="px-2 py-1 rounded hover:bg-gray-200 disabled:opacity-40"
+                            onClick={handleNextPage}
+                            disabled={currentPage === totalPages || totalRows === 0}
+                        >
+                            <i className="fa-solid fa-chevron-right text-xs"></i>
+                        </button>
                     </div>
                 </div>
             </div>
