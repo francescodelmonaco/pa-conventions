@@ -22,7 +22,7 @@ export default function Home() {
                 <input
                     className="border border-(--gray) rounded-2xl w-full px-3 py-1.5 bg-white shadow"
                     type="search"
-                    placeholder="Cerca un'attività..."
+                    placeholder="Cerca un negozio..."
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                 />
