@@ -1,17 +1,17 @@
+import { useState } from "react";
 import DetailsModal from "../components/DetailsModal";
+import Table from "../components/Table";
 import { useGlobalContext } from "../contexts/GlobalContexts";
 
 export default function Home() {
     const {
-        filteredConventions,
         search,
         setSearch,
         typeFilter,
         setTypeFilter,
         typeOptions,
         modalOpen,
-        selectedConvention,
-        handleInfoClick
+        selectedConvention
     } = useGlobalContext();
 
     return (
@@ -19,20 +19,8 @@ export default function Home() {
             <h1 className="font-bold text-2xl text-center uppercase">Convenzioni</h1>
 
             <div className="flex justify-between gap-3 items-center">
-                <select
-                    name="categories"
-                    className="bg-(--blue) text-(--white) border border-(--blue) rounded-2xl px-3 cursor-pointer py-1.5"
-                    value={typeFilter}
-                    onChange={e => setTypeFilter(e.target.value)}
-                >
-                    <option value="">Categoria</option>
-                    {typeOptions.map(type => (
-                        <option key={type} value={type}>{type}</option>
-                    ))}
-                </select>
-
                 <input
-                    className="border border-(--gray) rounded-2xl w-full px-3 py-1.5"
+                    className="border border-(--gray) rounded-2xl w-full px-3 py-1.5 bg-white shadow"
                     type="search"
                     placeholder="Cerca un'attività..."
                     value={search}
@@ -40,49 +28,61 @@ export default function Home() {
                 />
 
                 <button
-                    className="bg-(--blue) text-(--white) border border-(--blue) rounded-2xl px-4 cursor-pointer flex gap-3 py-1.5"
+                    className="bg-(--blue) text-(--white) border border-(--blue) rounded-2xl px-4 cursor-pointer flex gap-3 py-1.5 shadow"
                     type="button"
                 >
                     <i className="fa-solid fa-magnifying-glass my-auto"></i>Cerca
                 </button>
             </div>
 
-            <table className="text-center bg-white shadow rounded-2xl">
-                <thead>
-                    <tr>
-                        <th className="py-2">Tipologia</th>
-                        <th className="py-2">Negozio</th>
-                        <th className="py-2">Sede</th>
-                        <th className="py-2">Scontistica</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Array.isArray(filteredConventions) && filteredConventions.length > 0 ? (
-                        filteredConventions.map(c => {
-                            const { id, types, names, locations, discounts } = c;
-                            return (
-                                <tr key={id}>
-                                    <td className="py-2">{types ?? '-'}</td>
-                                    <td className="py-2">{names ?? '-'}</td>
-                                    <td className="py-2">{locations ?? '-'}</td>
-                                    <td className="py-2">{discounts ?? '-'}</td>
-                                    <td>
-                                        <button
-                                            className="bg-(--gray) text-(--white) px-2 py-1 rounded-full font-bold cursor-pointer text-sm"
-                                            onClick={() => handleInfoClick(c)}
-                                        >Info</button>
-                                    </td>
-                                </tr>
-                            )
-                        })
-                    ) : (
-                        <tr>
-                            <td colSpan={5} className="py-2"><p>Nessuna convenzione trovata</p></td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+            <div className="flex gap-3 items-start">
+                {/* categories accordion */}
+                {(() => {
+                    const [open, setOpen] = useState(false);
+                    return (
+                        <div className="flex flex-col gap-1 w-1/4">
+                            <button
+                                type="button"
+                                className="flex items-center justify-between font-semibold mb-1 px-2 py-2 border border-(--white) border-b-(--gray) hover:bg-gray-50 transition cursor-pointer text-(--blue)"
+                                onClick={() => setOpen(prev => !prev)}
+                                aria-expanded={open}
+                                aria-controls="categorie-accordion-panel"
+                            >
+                                <span>Categorie</span>
+                                <span className={`transition-transform ${open ? 'rotate-90' : ''}`}>
+                                    <i className="fa-solid fa-caret-right"></i>
+                                </span>
+                            </button>
+
+                            {open && (
+                                <div id="categorie-accordion-panel" className="flex flex-col gap-1 border border-white rounded-b px-2 py-2 bg-white shadow">
+                                    {typeOptions.map(type => (
+                                        <label key={type} className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                className="category-checkbox"
+                                                value={type}
+                                                checked={typeFilter.includes(type)}
+                                                onChange={e => {
+                                                    if (e.target.checked) {
+                                                        setTypeFilter([...typeFilter, type]);
+                                                    } else {
+                                                        setTypeFilter(typeFilter.filter(t => t !== type));
+                                                    }
+                                                }}
+                                            />
+                                            <span>{type}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })()}
+
+                <Table />
+            </div>
+
 
             {/* details modal */}
             {modalOpen && selectedConvention && (

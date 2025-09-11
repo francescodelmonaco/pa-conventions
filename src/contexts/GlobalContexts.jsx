@@ -11,7 +11,7 @@ const GlobalProvider = ({ children }) => {
     // search/filter states
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
-    const [typeFilter, setTypeFilter] = useState("");
+    const [typeFilter, setTypeFilter] = useState([]);
     const debounceTimeout = useRef();
 
     // debounce search input
@@ -33,8 +33,8 @@ const GlobalProvider = ({ children }) => {
     // filter conventions by search and type
     const filteredConventions = useMemo(() => {
         let filtered = conventions;
-        if (typeFilter) {
-            filtered = filtered.filter(c => c.types === typeFilter);
+        if (Array.isArray(typeFilter) && typeFilter.length > 0) {
+            filtered = filtered.filter(c => typeFilter.includes(c.types));
         }
         if (debouncedSearch) {
             filtered = filtered.filter(c =>
