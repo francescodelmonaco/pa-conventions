@@ -30,6 +30,7 @@ const GlobalProvider = ({ children }) => {
         return Array.from(new Set(allTypes));
     }, [conventions]);
 
+
     // filter conventions by search and type
     const filteredConventions = useMemo(() => {
         let filtered = conventions;
@@ -43,6 +44,36 @@ const GlobalProvider = ({ children }) => {
         }
         return filtered;
     }, [conventions, debouncedSearch, typeFilter]);
+
+    // Ordinamento tabella
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key) {
+                return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+            }
+            return { key, direction: "asc" };
+        });
+    };
+    const sortedConventions = useMemo(() => {
+        if (!Array.isArray(filteredConventions)) return [];
+        if (!sortConfig.key) return filteredConventions;
+        const sorted = [...filteredConventions].sort((a, b) => {
+            const aValue = a[sortConfig.key] ?? "";
+            const bValue = b[sortConfig.key] ?? "";
+            // Numeric sort if both are numbers
+            if (!isNaN(parseFloat(aValue)) && !isNaN(parseFloat(bValue))) {
+                return sortConfig.direction === "asc"
+                    ? parseFloat(aValue) - parseFloat(bValue)
+                    : parseFloat(bValue) - parseFloat(aValue);
+            }
+            // String sort
+            return sortConfig.direction === "asc"
+                ? String(aValue).localeCompare(String(bValue))
+                : String(bValue).localeCompare(String(aValue));
+        });
+        return sorted;
+    }, [filteredConventions, sortConfig]);
 
     // chiamate api per tutti i post
     const getConventions = async () => {
@@ -80,6 +111,9 @@ const GlobalProvider = ({ children }) => {
     const value = {
         conventions,
         filteredConventions,
+        sortedConventions,
+        sortConfig,
+        handleSort,
         search,
         setSearch,
         typeFilter,

@@ -43,7 +43,7 @@ export default function Home() {
                         <div className="flex flex-col gap-1 w-1/4">
                             <button
                                 type="button"
-                                className="flex items-center justify-between font-semibold mb-1 px-2 py-2 border border-(--white) border-b-(--gray) hover:bg-gray-50 transition cursor-pointer text-(--blue)"
+                                className="flex items-center justify-between font-semibold mb-1 px-2 py-2 border border-(--white) border-b-(--gray) transition cursor-pointer text-(--blue)"
                                 onClick={() => setOpen(prev => !prev)}
                                 aria-expanded={open}
                                 aria-controls="categorie-accordion-panel"
@@ -55,7 +55,7 @@ export default function Home() {
                             </button>
 
                             {open && (
-                                <div id="categorie-accordion-panel" className="flex flex-col gap-1 border border-white rounded-b px-2 py-2 bg-white shadow">
+                                <div id="categorie-accordion-panel" className="flex flex-col gap-1 rounded-b px-2 py-2">
                                     {typeOptions.map(type => (
                                         <label key={type} className="flex items-center gap-2">
                                             <input
