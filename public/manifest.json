@@ -3,8 +3,8 @@
     "short_name": "PoliConv",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#1976d2",
+    "background_color": "#fafafa",
+    "theme_color": "#1d2346",
     "description": "Gestione convenzioni Poliambulanza",
     "icons": [
         {
