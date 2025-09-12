@@ -15,7 +15,7 @@ export default function Home() {
     } = useGlobalContext();
 
     return (
-        <div className="w-5/6 mx-auto py-5 flex flex-col justify-between gap-5">
+        <div className="w-11/12 sm:w-5/6 mx-auto py-5 flex flex-col justify-between gap-5">
             {/* <h1 className="font-bold text-2xl text-center uppercase">Convenzioni</h1> */}
 
             <div className="flex justify-between gap-3 items-center">
@@ -27,20 +27,20 @@ export default function Home() {
                     onChange={e => setSearch(e.target.value)}
                 />
 
-                <button
+                {/* <button
                     className="bg-(--blue) text-(--white) border border-(--blue) rounded-2xl px-4 cursor-pointer flex gap-3 py-1.5 shadow"
                     type="button"
                 >
                     <i className="fa-solid fa-magnifying-glass my-auto"></i>Cerca
-                </button>
+                </button> */}
             </div>
 
-            <div className="flex gap-3 items-start">
+            <div className="flex flex-col sm:flex-row gap-3 items-start">
                 {/* categories accordion */}
                 {(() => {
                     const [open, setOpen] = useState(false);
                     return (
-                        <div className="flex flex-col gap-1 w-1/4">
+                        <div className="flex flex-col gap-1 w-full sm:w-1/4">
                             <button
                                 type="button"
                                 className="flex items-center justify-between font-semibold mb-1 px-2 py-2 border border-(--white) border-b-(--gray) transition cursor-pointer text-(--blue)"

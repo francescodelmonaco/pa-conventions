@@ -15,9 +15,9 @@ export default function Table() {
     const [rowsPerPage, setRowsPerPage] = useState(20);
 
     const columns = [
-        { key: "types", label: "Categoria" },
+        { key: "types", label: "Categoria", hideOnSm: true },
         { key: "names", label: "Negozio" },
-        { key: "locations", label: "Sede" },
+        { key: "locations", label: "Sede", hideOnSm: true },
         { key: "discounts", label: "Scontistica" },
     ];
 
@@ -87,7 +87,10 @@ export default function Table() {
                             {columns.map(col => (
                                 <th
                                     key={col.key}
-                                    className="py-3 px-4 font-semibold cursor-pointer select-none text-left"
+                                    className={
+                                        `py-3 px-4 font-semibold cursor-pointer select-none text-left` +
+                                        (col.hideOnSm ? " hidden sm:table-cell" : "")
+                                    }
                                     onClick={() => handleSort(col.key)}
                                 >
                                     <span className="flex items-center gap-1">
@@ -128,16 +131,16 @@ export default function Table() {
                                                 : "bg-gray-50 hover:bg-gray-100 transition"
                                         }
                                     >
-                                        <td className="py-3 px-4">
+                                        <td className="py-3 px-4 w-1/4 hidden sm:table-cell">
                                             {types ?? "-"}
                                         </td>
-                                        <td className="py-3 px-4 font-semibold">
+                                        <td className="py-3 px-4 font-semibold w-2/3 sm:w-1/4">
                                             {names ?? "-"}
                                         </td>
-                                        <td className="py-3 px-4">
+                                        <td className="py-3 px-4 w-1/4 hidden sm:table-cell">
                                             {locations ?? "-"}
                                         </td>
-                                        <td className="py-3 px-4">
+                                        <td className="py-3 px-4 w-1/3 sm:w-1/4">
                                             {discounts ?? "-"}
                                         </td>
                                         <td className="py-3 px-4">
@@ -150,7 +153,6 @@ export default function Table() {
                                 );
                             })
                         ) : (
-                            // Mostra il messaggio solo se c'è una ricerca attiva e non ci sono risultati
                             <tr>
                                 <td colSpan={5} className="py-6 text-center text-gray-400 text-sm">
                                     {search ? <p>Nessuna convenzione trovata</p> : null}
@@ -161,7 +163,7 @@ export default function Table() {
                 </table>
 
                 {/* pagination */}
-                <div className="flex items-center justify-between px-6 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500">
+                <div className="flex items-center justify-between px-6 py-3 bg-gray-50 border-t border-gray-200 text-xs text-gray-500 gap-3">
                     <span>{fromRow}-{toRow} di {totalRows}</span>
                     <div className="flex items-center gap-2">
                         <span>Righe per pagina:

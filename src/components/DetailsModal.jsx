@@ -8,13 +8,13 @@ export default function DetailsModal() {
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl shadow-lg p-6 w-3/5 relative">
+            <div className="bg-white rounded-2xl shadow-lg p-6 w-11/12 sm:w-3/5 relative">
                 <button
                     className="absolute top-3 right-3 text-lg font-bold text-(--gray) hover:text-gray-800 hover:cursor-pointer"
                     onClick={closeModal}
                     aria-label="Chiudi"
                 >
-                    <i class="fa-solid fa-xmark"></i>
+                    <i className="fa-solid fa-xmark"></i>
                 </button>
 
                 <h2 className="text-xl font-bold mb-2 text-center uppercase">{selectedConvention.names ?? '-'}</h2>
