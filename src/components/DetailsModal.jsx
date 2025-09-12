@@ -7,7 +7,7 @@ export default function DetailsModal() {
     } = useGlobalContext();
 
     return (
-        <div className="fixed inset-0 bg-black/80 flex items-start py-3 sm:py-0 sm:items-center justify-center z-50 overflow-auto">
+        <div className="fixed inset-0 bg-black/80 flex items-start py-3 sm:py-0 sm:items-center justify-center z-50 overflow-y-auto">
             <div className="bg-white rounded-2xl shadow-lg p-6 w-11/12 sm:w-3/5 relative">
                 <button
                     className="absolute top-3 right-3 text-lg font-bold text-(--gray) hover:text-gray-800 hover:cursor-pointer"
