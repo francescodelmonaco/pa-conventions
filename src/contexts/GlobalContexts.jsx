@@ -7,6 +7,7 @@ const GlobalContext = createContext();
 const GlobalProvider = ({ children }) => {
     // posts list
     const [conventions, setConventions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     // search/filter states
     const [search, setSearch] = useState("");
@@ -77,6 +78,7 @@ const GlobalProvider = ({ children }) => {
 
     // chiamate api per tutti i post
     const getConventions = async () => {
+        setIsLoading(true);
         const { data, error } = await supabase
             .from('conventions')
             .select('*');
@@ -84,10 +86,12 @@ const GlobalProvider = ({ children }) => {
         if (error) {
             console.error(error);
             setConventions([]);
+            setIsLoading(false);
             return;
         };
 
         setConventions(data || []);
+        setIsLoading(false);
         console.log('Fetched conventions:', data);
     };
 
@@ -119,6 +123,7 @@ const GlobalProvider = ({ children }) => {
         typeFilter,
         setTypeFilter,
         typeOptions,
+        isLoading,
         // modale
         modalOpen,
         selectedConvention,

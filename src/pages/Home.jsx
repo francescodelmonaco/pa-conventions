@@ -16,7 +16,7 @@ export default function Home() {
 
     return (
         <div className="w-5/6 mx-auto py-5 flex flex-col justify-between gap-5">
-            <h1 className="font-bold text-2xl text-center uppercase">Convenzioni</h1>
+            {/* <h1 className="font-bold text-2xl text-center uppercase">Convenzioni</h1> */}
 
             <div className="flex justify-between gap-3 items-center">
                 <input

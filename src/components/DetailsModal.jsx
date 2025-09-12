@@ -38,15 +38,15 @@ export default function DetailsModal() {
                     )}
                     <div className="flex gap-2 align-middle items-center">
                         <p><strong>Telefono:</strong> {selectedConvention.phones ?? '-'}</p>
-                        <button className="bg-(--blue) text-(--white) px-3 py-1 rounded-full cursor-pointer text-sm">
+                        {/* <button className="bg-(--blue) text-(--white) px-3 py-1 rounded-full cursor-pointer text-sm">
                             <i class="fa-solid fa-phone"></i> Chiama
-                        </button>
+                        </button> */}
                     </div>
                     <div className="flex gap-2 align-middle items-center">
                         <p><strong>Mail:</strong> {selectedConvention.mails ?? '-'}</p>
-                        <button className="bg-(--blue) text-(--white) px-3 py-1 rounded-full cursor-pointer text-sm">
+                        {/* <button className="bg-(--blue) text-(--white) px-3 py-1 rounded-full cursor-pointer text-sm">
                             <i class="fa-solid fa-envelope"></i> Scrivi
-                        </button>
+                        </button> */}
                     </div>
                     <p><strong>Validità:</strong> fino al {new Date(selectedConvention.expirations).toLocaleDateString('it-IT') ?? '-'}</p>
                     <p><strong>Note:</strong> {selectedConvention.notes ?? '-'}</p>

@@ -1,10 +1,13 @@
 import { useGlobalContext } from "../contexts/GlobalContexts";
 import { useState, useMemo } from "react";
+import Loader from "./Loader";
 
 export default function Table() {
     const {
         filteredConventions,
-        handleInfoClick
+        handleInfoClick,
+        isLoading,
+        search
     } = useGlobalContext();
 
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
@@ -46,12 +49,8 @@ export default function Table() {
         return sortedConventions.slice(startIdx, startIdx + rowsPerPage);
     }, [sortedConventions, currentPage, rowsPerPage]);
 
-    // Adjust current page if rowsPerPage or filteredConventions changes
-    // (e.g. if you filter and currentPage is now out of range)
-    // eslint-disable-next-line
     useMemo(() => {
         if (currentPage > totalPages) setCurrentPage(1);
-        // eslint-disable-next-line
     }, [rowsPerPage, totalPages]);
 
     const handleSort = (key) => {
@@ -109,9 +108,17 @@ export default function Table() {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(paginatedConventions) && paginatedConventions.length > 0 ? (
+                        {isLoading ? (
+                            <tr>
+                                <td colSpan={5} className="py-10">
+                                    <div className="flex justify-center">
+                                        <Loader />
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : Array.isArray(paginatedConventions) && paginatedConventions.length > 0 ? (
                             paginatedConventions.map((c, idx) => {
-                                const { id, types, names, locations, discounts, status, balance, rate, deposit, phone } = c;
+                                const { id, types, names, locations, discounts } = c;
                                 return (
                                     <tr
                                         key={id}
@@ -124,7 +131,7 @@ export default function Table() {
                                         <td className="py-3 px-4">
                                             {types ?? "-"}
                                         </td>
-                                        <td className="py-3 px-4 font-medium text-gray-900">
+                                        <td className="py-3 px-4 font-semibold">
                                             {names ?? "-"}
                                         </td>
                                         <td className="py-3 px-4">
@@ -143,8 +150,11 @@ export default function Table() {
                                 );
                             })
                         ) : (
+                            // Mostra il messaggio solo se c'è una ricerca attiva e non ci sono risultati
                             <tr>
-                                <td colSpan={5} className="py-6 text-center text-gray-400 text-sm"><p>Nessuna convenzione trovata</p></td>
+                                <td colSpan={5} className="py-6 text-center text-gray-400 text-sm">
+                                    {search ? <p>Nessuna convenzione trovata</p> : null}
+                                </td>
                             </tr>
                         )}
                     </tbody>
